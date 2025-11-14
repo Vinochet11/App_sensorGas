@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Paleta de colores coherente con la pantalla principal
+
 private val FondoMorado = Color(0xFF5C1A99)
 private val TextoPrincipal = Color(0xFFFFFFFF)
 private val BotonAzul = Color(0xFF0D47A1)
