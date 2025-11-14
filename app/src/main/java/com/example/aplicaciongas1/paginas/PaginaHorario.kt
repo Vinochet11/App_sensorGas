@@ -55,8 +55,9 @@ fun PaginaHorario(modifier: Modifier=Modifier){
 @Composable
 fun seleccionHorario(){
     val context=LocalContext.current
-    var horaInicio by remember { mutableStateOf("08:00") }
-    var horaFin by remember { mutableStateOf("18:00") }
+    var horaInicio by remember { mutableStateOf("") }
+    var horaFin by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier

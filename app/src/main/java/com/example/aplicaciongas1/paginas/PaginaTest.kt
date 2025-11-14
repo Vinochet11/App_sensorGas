@@ -1,5 +1,6 @@
 package com.example.aplicaciongas1.paginas
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,8 +50,10 @@ fun PaginaTest(modifier: Modifier = Modifier) {
 
 @Composable
 fun TestVentilador(onClick: () -> Unit) {
+    val context = LocalContext.current
+    val msg = "probando Ventilador"
     Button(
-        onClick = { onClick() },
+        onClick = { Toast.makeText(context, msg, Toast.LENGTH_SHORT).show() },
         colors = ButtonDefaults.buttonColors(containerColor = BotonVerde),
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -61,8 +65,9 @@ fun TestVentilador(onClick: () -> Unit) {
 
 @Composable
 fun TestBuzzer(onClick: () -> Unit) {
+    val context = LocalContext.current
     Button(
-        onClick = { onClick() },
+        onClick = { Toast.makeText(context,"Probando Parlante", Toast.LENGTH_LONG).show() },
         colors = ButtonDefaults.buttonColors(containerColor = BotonAzul),
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -74,8 +79,9 @@ fun TestBuzzer(onClick: () -> Unit) {
 
 @Composable
 fun TestLedAzul(onClick: () -> Unit) {
+    val context=LocalContext.current
     Button(
-        onClick = { onClick() },
+        onClick = { Toast.makeText(context,"Funcionando Led Azul", Toast.LENGTH_LONG).show() },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -87,8 +93,9 @@ fun TestLedAzul(onClick: () -> Unit) {
 
 @Composable
 fun TestLedRojo(onClick: () -> Unit) {
+    val context= LocalContext.current
     Button(
-        onClick = { onClick() },
+        onClick = { Toast.makeText(context,"Prueba led rojo", Toast.LENGTH_LONG).show() },
         colors = ButtonDefaults.buttonColors(containerColor = BotonRojo),
         modifier = Modifier
             .fillMaxWidth(0.8f)
@@ -100,8 +107,9 @@ fun TestLedRojo(onClick: () -> Unit) {
 
 @Composable
 fun TestTodo(onClick: () -> Unit) {
+    val context=LocalContext.current
     Button(
-        onClick = { onClick() },
+        onClick = { Toast.makeText(context,"Probando sistema completo",Toast.LENGTH_SHORT).show() },
         colors = ButtonDefaults.buttonColors(containerColor = BotonGris),
         modifier = Modifier
             .fillMaxWidth(0.8f)
