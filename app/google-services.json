@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316668261249",
+    "project_id": "sensorgas-3aafe",
+    "storage_bucket": "sensorgas-3aafe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316668261249:android:445a547056725f065fee80",
+        "android_client_info": {
+          "package_name": "com.example.aplicaciongas1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBjySjml1YDIyNR-QH6PrS37jUa5HO8XE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
