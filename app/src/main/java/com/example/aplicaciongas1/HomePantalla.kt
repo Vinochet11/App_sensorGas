@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
@@ -54,7 +55,7 @@ fun HomePantalla(
     val navItemList = listOf(
         NavItem("Home", Icons.Default.Home),
         NavItem("test", Icons.Default.PlayArrow),
-        NavItem("horario", Icons.Default.Share),
+        NavItem("horario", Icons.Default.DateRange),
         NavItem("logs", Icons.Default.Info),
         NavItem("configuracion", Icons.Default.Build),
 
