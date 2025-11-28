@@ -1,6 +1,5 @@
 package com.example.aplicaciongas1.paginas
 
-import android.R
 import android.app.TimePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.background
@@ -55,9 +54,8 @@ fun PaginaHorario(modifier: Modifier=Modifier){
 @Composable
 fun seleccionHorario(){
     val context=LocalContext.current
-    var horaInicio by remember { mutableStateOf("") }
-    var horaFin by remember { mutableStateOf("") }
-
+    var horaInicio by remember { mutableStateOf("08:00") }
+    var horaFin by remember { mutableStateOf("18:00") }
 
     Column(
         modifier = Modifier
