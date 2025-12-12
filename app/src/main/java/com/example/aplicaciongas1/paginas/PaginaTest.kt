@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.database.FirebaseDatabase
 
 
 private val FondoMorado = Color(0xFF5C1A99)
@@ -40,81 +41,94 @@ fun PaginaTest(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        TestTodo {}
-        TestLedRojo {}
-        TestLedAzul {}
-        TestBuzzer {}
-        TestVentilador {}
+        TestTodo()
+        TestLedRojo()
+        TestLedAzul()
+        TestBuzzer()
+        TestVentilador()
     }
 }
 
+fun toggleValue(path: String) {
+    val ref = FirebaseDatabase.getInstance().getReference("test_control").child(path)
+    ref.get().addOnSuccessListener {
+        val current = it.getValue(Boolean::class.java) ?: false
+        ref.setValue(!current)
+    }
+}
+
+
 @Composable
-fun TestVentilador(onClick: () -> Unit) {
+fun TestVentilador() {
     val context = LocalContext.current
-    val msg = "probando Ventilador"
+
     Button(
-        onClick = { Toast.makeText(context, msg, Toast.LENGTH_SHORT).show() },
+        onClick = {
+            toggleValue("ventilador")
+            Toast.makeText(context, "Ventilador ON / OFF", Toast.LENGTH_SHORT).show()
+        },
         colors = ButtonDefaults.buttonColors(containerColor = BotonVerde),
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .height(55.dp)
+        modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
     ) {
         Text("Prueba del Ventilador", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
 }
-
 @Composable
-fun TestBuzzer(onClick: () -> Unit) {
-    val context = LocalContext.current
+fun TestLedAzul() {
     Button(
-        onClick = { Toast.makeText(context,"Probando Parlante", Toast.LENGTH_LONG).show() },
-        colors = ButtonDefaults.buttonColors(containerColor = BotonAzul),
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .height(55.dp)
-    ) {
-        Text("Prueba del Buzzer", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
-    }
-}
-
-@Composable
-fun TestLedAzul(onClick: () -> Unit) {
-    val context=LocalContext.current
-    Button(
-        onClick = { Toast.makeText(context,"Funcionando Led Azul", Toast.LENGTH_LONG).show() },
+        onClick = { toggleValue("led_azul") },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .height(55.dp)
+        modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
     ) {
         Text("Prueba del Led Azul", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
 }
-
 @Composable
-fun TestLedRojo(onClick: () -> Unit) {
-    val context= LocalContext.current
+fun TestBuzzer() {
+    val context = LocalContext.current
+
     Button(
-        onClick = { Toast.makeText(context,"Prueba led rojo", Toast.LENGTH_LONG).show() },
+        onClick = {
+            toggleValue("buzzer")
+            Toast.makeText(context, "Buzzer ON / OFF", Toast.LENGTH_SHORT).show()
+        },
+        colors = ButtonDefaults.buttonColors(containerColor = BotonAzul),
+        modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
+    ) {
+        Text("Prueba del Buzzer", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+    }
+}
+@Composable
+fun TestLedRojo() {
+    Button(
+        onClick = { toggleValue("led_rojo") },
         colors = ButtonDefaults.buttonColors(containerColor = BotonRojo),
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .height(55.dp)
+        modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
     ) {
         Text("Prueba del Led Rojo", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
 }
 
+
 @Composable
-fun TestTodo(onClick: () -> Unit) {
-    val context=LocalContext.current
+fun TestTodo() {
+    val ref = FirebaseDatabase.getInstance().getReference("test_control")
+
     Button(
-        onClick = { Toast.makeText(context,"Probando sistema completo",Toast.LENGTH_SHORT).show() },
+        onClick = {
+            ref.get().addOnSuccessListener {
+                val current = it.child("led_rojo").getValue(Boolean::class.java) ?: false
+                val newState = !current
+
+                ref.child("led_rojo").setValue(newState)
+                ref.child("led_azul").setValue(newState)
+                ref.child("buzzer").setValue(newState)
+                ref.child("ventilador").setValue(newState)
+            }
+        },
         colors = ButtonDefaults.buttonColors(containerColor = BotonGris),
-        modifier = Modifier
-            .fillMaxWidth(0.8f)
-            .height(55.dp)
+        modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
     ) {
-        Text("Funcionamiento del sistema completo", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text("Sistema completo ON / OFF", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
 }

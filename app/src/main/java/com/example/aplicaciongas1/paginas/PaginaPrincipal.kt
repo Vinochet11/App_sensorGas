@@ -26,7 +26,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect   // 👈 agregado
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +38,7 @@ import androidx.compose.ui.geometry.Offset.Companion.Unspecified
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,6 +46,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aplicaciongas1.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -172,8 +176,45 @@ private fun obtenerFechaHoraActual():String{
     return formato.format(ahora)
 }
 
+
 @Composable
 fun tarjeta() {
+
+    val dbRef = remember {
+        Firebase.database.getReference("sensor_data")
+    }
+
+    var rawValue by remember { mutableStateOf<Int?>(null) }
+    var voltage by remember { mutableStateOf<Double?>(null) }
+    var lastUpdate by remember { mutableStateOf<Long?>(null) }
+
+
+    LaunchedEffect(Unit) {
+        dbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                rawValue = snapshot.child("raw").getValue(Int::class.java)
+                voltage = snapshot.child("voltage").getValue(Double::class.java)
+                lastUpdate = snapshot.child("timestamp").getValue(Long::class.java)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("PaginaPrincipal", "Error leyendo sensor_data: ${error.message}")
+            }
+        })
+    }
+
+    val textoNivel = when {
+        rawValue == null -> "Nivel actual: cargando..."
+        voltage == null -> "Nivel actual: $rawValue (sin voltaje)"
+        else -> "Nivel actual: $rawValue | ${
+            String.format(
+                Locale.getDefault(),
+                "%.2f",
+                voltage
+            )
+        } V"
+    }
+
     Card(
         modifier = Modifier.padding(8.dp),
         colors = CardDefaults.cardColors(containerColor = TarjetaOscura),
@@ -192,10 +233,17 @@ fun tarjeta() {
                 fontSize = 18.sp
             )
             Text(
-                text = "Nivel Actual: 50 ppm",
+                text = textoNivel,
                 color = TextoSecundario,
                 fontSize = 14.sp
             )
+            if (lastUpdate != null) {
+                Text(
+                    text = "Última actualización: $lastUpdate",
+                    color = TextoSecundario,
+                    fontSize = 12.sp
+                )
+            }
         }
     }
 }

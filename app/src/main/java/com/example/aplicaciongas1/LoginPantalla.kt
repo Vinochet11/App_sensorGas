@@ -1,5 +1,6 @@
 package com.example.aplicaciongas1
 
+import android.util.Log
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.google.firebase.Firebase
 
@@ -51,7 +52,8 @@ fun LoginPantalla(navController: NavHostController) {
 
             val context = LocalContext.current
 
-            Button(onClick = {
+            Button(
+                onClick = {
                     Firebase.auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
@@ -60,15 +62,20 @@ fun LoginPantalla(navController: NavHostController) {
                                     "Login completado",
                                     Toast.LENGTH_SHORT
                                 ).show()
+
                                 navController.navigate("home") {
                                     popUpTo("login") { inclusive = true }
                                 }
                             } else {
                                 Toast.makeText(
                                     context,
-                                    task.exception?.message ?: "Registro erróneo",
-                                    Toast.LENGTH_SHORT
+                                    task.exception?.message ?: "Error de autenticación",
+                                    Toast.LENGTH_LONG
                                 ).show()
+
+                                task.exception?.let {
+                                    Log.e("LOGIN_ERROR", it.toString())
+                                }
                             }
                         }
                 },
