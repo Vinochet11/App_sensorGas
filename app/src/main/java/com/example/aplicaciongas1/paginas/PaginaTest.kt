@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
 
 
@@ -21,6 +22,11 @@ private val BotonAzul = Color(0xFF0D47A1)
 private val BotonVerde = Color(0xFF2E7D32)
 private val BotonRojo = Color(0xFFB71C1C)
 private val BotonGris = Color(0xFF424242)
+
+
+
+
+
 
 @Composable
 fun PaginaTest(modifier: Modifier = Modifier) {
@@ -46,8 +52,32 @@ fun PaginaTest(modifier: Modifier = Modifier) {
         TestLedAzul()
         TestBuzzer()
         TestVentilador()
+        BotonModo()
     }
 }
+@Composable
+fun BotonModo(){
+    val db= FirebaseDatabase.getInstance().getReference("test_control")
+    val context= LocalContext.current
+    Button(onClick = {
+        db.child("mode").get().addOnSuccessListener{
+            val current = it.getValue(String::class.java) ?: "auto"
+            val newMode= if(current=="auto") "manual" else "auto"
+            db.child("mode").setValue(newMode)
+
+            Toast.makeText(
+                context,"Modo cambiado a $newMode",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    },
+        colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+        modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
+    ) {
+        Text("cambiar modo Automatico/Manual", color = Color.White)
+    }
+}
+
 
 fun toggleValue(path: String) {
     val ref = FirebaseDatabase.getInstance().getReference("test_control").child(path)
@@ -101,14 +131,14 @@ fun TestBuzzer() {
 @Composable
 fun TestLedRojo() {
     Button(
-        onClick = { toggleValue("led_rojo") },
+        onClick = {setValue("led_rojo",true)},
         colors = ButtonDefaults.buttonColors(containerColor = BotonRojo),
         modifier = Modifier.fillMaxWidth(0.8f).height(55.dp)
+
     ) {
-        Text("Prueba del Led Rojo", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text("encender Led Rojo",color=TextoPrincipal)
     }
 }
-
 
 @Composable
 fun TestTodo() {
@@ -131,4 +161,11 @@ fun TestTodo() {
     ) {
         Text("Sistema completo ON / OFF", color = TextoPrincipal, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
+}
+
+fun setValue(path: String, value: Boolean){
+    FirebaseDatabase.getInstance()
+        .getReference("test_control")
+        .child(path)
+        .setValue(value)
 }
