@@ -184,17 +184,16 @@ fun tarjeta() {
         Firebase.database.getReference("sensor_data")
     }
 
-    var rawValue by remember { mutableStateOf<Int?>(null) }
-    var voltage by remember { mutableStateOf<Double?>(null) }
+    var sensorValue by remember { mutableStateOf<Int?>(null) }
     var lastUpdate by remember { mutableStateOf<Long?>(null) }
 
 
     LaunchedEffect(Unit) {
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                rawValue = snapshot.child("raw").getValue(Int::class.java)
-                voltage = snapshot.child("voltage").getValue(Double::class.java)
+                sensorValue = snapshot.child("value").getValue(Int::class.java)
                 lastUpdate = snapshot.child("timestamp").getValue(Long::class.java)
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -203,17 +202,12 @@ fun tarjeta() {
         })
     }
 
-    val textoNivel = when {
-        rawValue == null -> "Nivel actual: cargando..."
-        voltage == null -> "Nivel actual: $rawValue (sin voltaje)"
-        else -> "Nivel actual: $rawValue | ${
-            String.format(
-                Locale.getDefault(),
-                "%.2f",
-                voltage
-            )
-        } V"
+    val textoNivel = if (sensorValue == null) {
+        "Nivel actual: cargando..."
+    } else {
+        "Nivel actual: $sensorValue"
     }
+
 
     Card(
         modifier = Modifier.padding(8.dp),
