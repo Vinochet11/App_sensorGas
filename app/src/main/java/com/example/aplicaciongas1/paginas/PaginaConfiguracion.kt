@@ -269,3 +269,8 @@ fun fuerzaVentilador() {
         )
     }
 }
+
+@Composable
+fun ssssss(){
+
+}
