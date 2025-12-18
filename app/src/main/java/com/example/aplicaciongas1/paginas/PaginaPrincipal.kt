@@ -1,11 +1,7 @@
 package com.example.aplicaciongas1.paginas
 
-import android.R.attr.icon
-import android.widget.Button
-import android.widget.Toast
 import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,14 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -34,24 +26,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset.Companion.Unspecified
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aplicaciongas1.R
+import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+
 
 private val FondoMorado = Color(0xFF5C1A99)
 private val FondoNegro= Color(0xFF000000)
@@ -121,6 +112,11 @@ fun SimpleSlider() {
     )
 }
 
+private fun formatearFecha(timestamp:Long):String{
+    val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return formato.format(Date(timestamp))
+}
+
 @Composable
 fun BotonPrender(onCick: () -> Unit) {
     val context = LocalContext.current
@@ -171,7 +167,7 @@ fun BotonPrender(onCick: () -> Unit) {
 }
 
 private fun obtenerFechaHoraActual():String{
-    val formato = SimpleDateFormat("dd/MM/yyyy'T'HH:mm:ss", Locale.getDefault())
+    val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     val ahora = Date()
     return formato.format(ahora)
 }
@@ -233,10 +229,11 @@ fun tarjeta() {
             )
             if (lastUpdate != null) {
                 Text(
-                    text = "Última actualización: $lastUpdate",
+                    text = "Última actualización: ${formatearFecha(lastUpdate!!)}",
                     color = TextoSecundario,
                     fontSize = 12.sp
                 )
+
             }
         }
     }
